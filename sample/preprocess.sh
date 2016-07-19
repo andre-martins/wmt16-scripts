@@ -4,7 +4,7 @@
 # truecasing, and subword segmentation. 
 # for application to a different language pair,
 # change source and target prefix, optionally the number of BPE operations,
-# and the file names (currently, data/corpus and data/newsdev2016 are being processed)
+# and the file names (currently, ${DATA_PATH}/corpus and ${DATA_PATH}/newsdev2016 are being processed)
 
 # in the tokenization step, you will want to remove Romanian-specific normalization / diacritic removal,
 # and you may want to add your own.
@@ -37,49 +37,49 @@ nematus=${NEMATUS_PATH}
 # tokenize
 for prefix in corpus newsdev2016
  do
-   cat data/$prefix.$SRC | \
+   cat ${DATA_PATH}/$prefix.$SRC | \
    $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $SRC | \
    ../preprocess/normalise-romanian.py | \
    ../preprocess/remove-diacritics.py | \
-   $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $SRC > data/$prefix.tok.$SRC
+   $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $SRC > ${DATA_PATH}/$prefix.tok.$SRC
 
-   cat data/$prefix.$TRG | \
+   cat ${DATA_PATH}/$prefix.$TRG | \
    $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $TRG | \
-   $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $TRG > data/$prefix.tok.$TRG
+   $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $TRG > ${DATA_PATH}/$prefix.tok.$TRG
 
  done
 
 # clean empty and long sentences, and sentences with high source-target ratio (training corpus only)
-$mosesdecoder/scripts/training/clean-corpus-n.perl data/corpus.tok $SRC $TRG data/corpus.tok.clean 1 80
+$mosesdecoder/scripts/training/clean-corpus-n.perl ${DATA_PATH}/corpus.tok $SRC $TRG ${DATA_PATH}/corpus.tok.clean 1 80
 
 # train truecaser
-$mosesdecoder/scripts/recaser/train-truecaser.perl -corpus data/corpus.tok.clean.$SRC -model model/truecase-model.$SRC
-$mosesdecoder/scripts/recaser/train-truecaser.perl -corpus data/corpus.tok.clean.$TRG -model model/truecase-model.$TRG
+$mosesdecoder/scripts/recaser/train-truecaser.perl -corpus ${DATA_PATH}/corpus.tok.clean.$SRC -model ${MODEL_PATH}/truecase-model.$SRC
+$mosesdecoder/scripts/recaser/train-truecaser.perl -corpus ${DATA_PATH}/corpus.tok.clean.$TRG -model ${MODEL_PATH}/truecase-model.$TRG
 
 # apply truecaser (cleaned training corpus)
 for prefix in corpus
  do
-  $mosesdecoder/scripts/recaser/truecase.perl -model model/truecase-model.$SRC < data/$prefix.tok.clean.$SRC > data/$prefix.tc.$SRC
-  $mosesdecoder/scripts/recaser/truecase.perl -model model/truecase-model.$TRG < data/$prefix.tok.clean.$TRG > data/$prefix.tc.$TRG
+  $mosesdecoder/scripts/recaser/truecase.perl -model ${MODEL_PATH}/truecase-model.$SRC < ${DATA_PATH}/$prefix.tok.clean.$SRC > ${DATA_PATH}/$prefix.tc.$SRC
+  $mosesdecoder/scripts/recaser/truecase.perl -model ${MODEL_PATH}/truecase-model.$TRG < ${DATA_PATH}/$prefix.tok.clean.$TRG > ${DATA_PATH}/$prefix.tc.$TRG
  done
 
 # apply truecaser (dev/test files)
 for prefix in newsdev2016
  do
-  $mosesdecoder/scripts/recaser/truecase.perl -model model/truecase-model.$SRC < data/$prefix.tok.$SRC > data/$prefix.tc.$SRC
-  $mosesdecoder/scripts/recaser/truecase.perl -model model/truecase-model.$TRG < data/$prefix.tok.$TRG > data/$prefix.tc.$TRG
+  $mosesdecoder/scripts/recaser/truecase.perl -model ${MODEL_PATH}/truecase-model.$SRC < ${DATA_PATH}/$prefix.tok.$SRC > ${DATA_PATH}/$prefix.tc.$SRC
+  $mosesdecoder/scripts/recaser/truecase.perl -model ${MODEL_PATH}/truecase-model.$TRG < ${DATA_PATH}/$prefix.tok.$TRG > ${DATA_PATH}/$prefix.tc.$TRG
  done
 
 # train BPE
-cat data/corpus.tc.$SRC data/corpus.tc.$TRG | $subword_nmt/learn_bpe.py -s $bpe_operations > model/$SRC$TRG.bpe
+cat ${DATA_PATH}/corpus.tc.$SRC ${DATA_PATH}/corpus.tc.$TRG | $subword_nmt/learn_bpe.py -s $bpe_operations > ${MODEL_PATH}/$SRC$TRG.bpe
 
 # apply BPE
 
 for prefix in corpus newsdev2016
  do
-  $subword_nmt/apply_bpe.py -c model/$SRC$TRG.bpe < data/$prefix.tc.$SRC > data/$prefix.bpe.$SRC
-  $subword_nmt/apply_bpe.py -c model/$SRC$TRG.bpe < data/$prefix.tc.$TRG > data/$prefix.bpe.$TRG
+  $subword_nmt/apply_bpe.py -c ${MODEL_PATH}/$SRC$TRG.bpe < ${DATA_PATH}/$prefix.tc.$SRC > ${DATA_PATH}/$prefix.bpe.$SRC
+  $subword_nmt/apply_bpe.py -c ${MODEL_PATH}/$SRC$TRG.bpe < ${DATA_PATH}/$prefix.tc.$TRG > ${DATA_PATH}/$prefix.bpe.$TRG
  done
 
 # build network dictionary
-$nematus/data/build_dictionary.py data/corpus.bpe.$SRC data/corpus.bpe.$TRG
+$nematus/data/build_dictionary.py ${DATA_PATH}/corpus.bpe.$SRC ${DATA_PATH}/corpus.bpe.$TRG

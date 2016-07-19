@@ -14,10 +14,10 @@ mosesdecoder=${MOSES_DECODER_PATH}
 device=gpu
 
 #model prefix
-prefix=model/model.npz
+prefix=${MODEL_PATH}/model.npz
 
-dev=data/newsdev2016.bpe.ro
-ref=data/newsdev2016.tok.en
+dev=${DATA_PATH}/newsdev2016.bpe.ro
+ref=${DATA_PATH}/newsdev2016.tok.en
 
 # decode
 THEANO_FLAGS=mode=FAST_RUN,floatX=float32,device=$device,on_unused_input=warn python $nematus/nematus/translate.py \

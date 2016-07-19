@@ -13,6 +13,8 @@ This can be done by creating a ```.env``` file locally containing the following 
 MOSES_DECODER_PATH="/path/to/mosesdecoder"
 SUBWORD_NMT_PATH="/path/to/subword-nmt"
 NEMATUS_PATH="/path/to/nematus"
+DATA_PATH="/path/to/data"
+MODEL_PATH="/path/to/model"
 ```
 
 For processing new data, more changes will be necessary.
