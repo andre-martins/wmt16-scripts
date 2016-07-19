@@ -11,6 +11,10 @@
 # also, you may want to learn BPE segmentations separately for each language,
 # especially if they differ in their alphabet
 
+# Define the environment variables containing the paths to Moses, Nematus, etc.
+# These paths must be stored in a .env file.
+export $(cat .env | xargs)
+
 # suffix of source language files
 SRC=ro
 
@@ -22,13 +26,13 @@ TRG=en
 bpe_operations=89500
 
 # path to moses decoder: https://github.com/moses-smt/mosesdecoder
-mosesdecoder=/path/to/mosesdecoder
+mosesdecoder=${MOSES_DECODER_PATH}
 
 # path to subword segmentation scripts: https://github.com/rsennrich/subword-nmt
-subword_nmt=/path/to/subword-nmt 
+subword_nmt=${SUBWORD_NMT_PATH}
 
 # path to nematus ( https://www.github.com/rsennrich/nematus )
-nematus=/path/to/nematus
+nematus=${NEMATUS_PATH}
 
 # tokenize
 for prefix in corpus newsdev2016

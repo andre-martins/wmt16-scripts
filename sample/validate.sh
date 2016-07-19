@@ -1,10 +1,14 @@
 #!/bin/sh
 
+# Define the environment variables containing the paths to Moses, Nematus, etc.
+# These paths must be stored in a .env file.
+export $(cat .env | xargs)
+
 # path to nematus ( https://www.github.com/rsennrich/nematus )
-nematus=/path/to/nematus
+nematus=${NEMATUS_PATH}
 
 # path to moses decoder: https://github.com/moses-smt/mosesdecoder
-mosesdecoder=/path/to/mosesdecoder
+mosesdecoder=${MOSES_DECODER_PATH}
 
 # theano device
 device=gpu

@@ -6,6 +6,15 @@ INSTRUCTIONS
 
 all scripts contain variables that you will need to set to run the scripts.
 For processing the sample data, only paths to different toolkits need to be set.
+
+This can be done by creating a ```.env``` file locally containing the following paths:
+
+```
+MOSES_DECODER_PATH="/path/to/mosesdecoder"
+SUBWORD_NMT_PATH="/path/to/subword-nmt"
+NEMATUS_PATH="/path/to/nematus"
+```
+
 For processing new data, more changes will be necessary.
 
 As a first step, preprocess the training data:
