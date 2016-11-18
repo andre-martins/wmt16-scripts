@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # this sample script preprocesses a sample corpus, including tokenization,
-# truecasing, and subword segmentation. 
+# truecasing, and subword segmentation.
 # for application to a different language pair,
 # change source and target prefix, optionally the number of BPE operations,
 # and the file names (currently, ${DATA_PATH}/corpus and ${DATA_PATH}/newsdev2016 are being processed)
