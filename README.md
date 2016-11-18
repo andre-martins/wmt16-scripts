@@ -2,7 +2,8 @@ Scripts for Edinburgh Neural MT systems for WMT 16
 ==================================================
 
 This repository contains scripts and an example config used for the Edinburgh Neural MT submission (UEDIN-NMT)
-for the shared translation task at the 2016 Workshops on Statistical Machine Translation (http://www.statmt.org/wmt16/).
+for the shared translation task at the 2016 Workshops on Statistical Machine Translation (http://www.statmt.org/wmt16/),
+and for the paper "Linguistic Input Features Improve Neural Machine Translation".
 
 The scripts will facilitate the reproduction of our results, and serve as additional documentation (along with the system description paper)
 
@@ -23,6 +24,8 @@ MODELS and DATA
 
 - automatically back-translated monolingual data, which we used for our WMT submissions, is available at http://statmt.org/rsennrich/wmt16_backtranslations/
 
+- linguistically annotated corpora which we used for our factored models are available at http://data.statmt.org/rsennrich/wmt16_factors/
+
 SCRIPTS
 -------
 
@@ -36,6 +39,22 @@ SCRIPTS
                    but in (Sennrich and Haddow, 2016).
 
 - r2l : scripts for reranking the output of the (default) left-to-right decoder with a model that decodes from right-to-left.
+
+
+EVALUATION
+----------
+
+WMT reports case-sensitive BLEU on detokenized text with the NIST BLEU scorer.
+Assuming that you have detokenized your output (see `sample/postprocess-test.sh`) in the file `output.detok`, here is how we score a system (on the example of EN-DE):
+
+```
+  /path/tom/mosesdecoder/scripts/ems/support/wrap-xml.perl de newstest2016-ende-src.en.sgm output.detok > tmpfile
+  /path/tom/mosesdecoder/scripts/generic/mteval-v13a.pl -c -s newstest2016-ende-src.en.sgm -r newstest2016-ende-ref.de.sgm -t tmpfile
+```
+
+Note that multi-bleu.perl on tokenized text will give different scores (usually higher), because of tokenization differences.
+Also, comparing different systems with tokenized BLEU is unreliable unless tokenization is identical.
+Even when using standard Moses tokenization, command line options like '-penn' and '-a' will cause inconsistencies.
 
 
 LICENSE

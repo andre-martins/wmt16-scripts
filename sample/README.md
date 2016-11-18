@@ -19,7 +19,11 @@ MODEL_PATH="/path/to/model"
 
 For processing new data, more changes will be necessary.
 
-As a first step, preprocess the training data:
+As a first step, download the training data:
+
+  ./download_files.sh
+
+Then, preprocess the training, dev and test data:
 
   ./preprocess.sh
 

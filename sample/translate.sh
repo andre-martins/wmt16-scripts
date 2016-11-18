@@ -4,7 +4,7 @@
 # These paths must be stored in a .env file.
 export $(cat .env | xargs)
 
-# theano device
+# theano device, in case you do not want to compute on gpu, change it to cpu
 device=gpu
 
 # path to nematus ( https://www.github.com/rsennrich/nematus )
