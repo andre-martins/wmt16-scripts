@@ -1,6 +1,7 @@
 import numpy
 import os
 import sys
+import logging
 
 from dotenv import load_dotenv
 load_dotenv(".env")
@@ -13,6 +14,8 @@ DATA_DIR = os.environ.get('DATA_PATH', 'data/')
 MODEL_DIR = os.environ.get('MODEL_PATH', 'model/')
 
 from nematus.nmt import train
+
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 if __name__ == '__main__':
     validerr = train(saveto=MODEL_DIR + '/model.npz',
