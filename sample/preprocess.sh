@@ -35,7 +35,7 @@ subword_nmt=${SUBWORD_NMT_PATH}
 nematus=${NEMATUS_PATH}
 
 # tokenize
-for prefix in corpus newsdev2016
+for prefix in corpus newsdev2016 newstest2016
  do
    cat ${DATA_PATH}/$prefix.$SRC | \
    $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $SRC | \
@@ -64,7 +64,7 @@ for prefix in corpus
  done
 
 # apply truecaser (dev/test files)
-for prefix in newsdev2016
+for prefix in newsdev2016 newstest2016
  do
   $mosesdecoder/scripts/recaser/truecase.perl -model ${MODEL_PATH}/truecase-model.$SRC < ${DATA_PATH}/$prefix.tok.$SRC > ${DATA_PATH}/$prefix.tc.$SRC
   $mosesdecoder/scripts/recaser/truecase.perl -model ${MODEL_PATH}/truecase-model.$TRG < ${DATA_PATH}/$prefix.tok.$TRG > ${DATA_PATH}/$prefix.tc.$TRG
@@ -75,7 +75,7 @@ cat ${DATA_PATH}/corpus.tc.$SRC ${DATA_PATH}/corpus.tc.$TRG | $subword_nmt/learn
 
 # apply BPE
 
-for prefix in corpus newsdev2016
+for prefix in corpus newsdev2016 newstest2016
  do
   $subword_nmt/apply_bpe.py -c ${MODEL_PATH}/$SRC$TRG.bpe < ${DATA_PATH}/$prefix.tc.$SRC > ${DATA_PATH}/$prefix.bpe.$SRC
   $subword_nmt/apply_bpe.py -c ${MODEL_PATH}/$SRC$TRG.bpe < ${DATA_PATH}/$prefix.tc.$TRG > ${DATA_PATH}/$prefix.bpe.$TRG
