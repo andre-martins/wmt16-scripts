@@ -16,7 +16,7 @@
 export $(cat .env | xargs)
 
 # suffix of source language files
-SRC=ro
+SRC=de #ro
 
 # suffix of target language files
 TRG=en
@@ -36,12 +36,19 @@ nematus=${NEMATUS_PATH}
 
 # tokenize
 for prefix in corpus newsdev2016 newstest2016
- do
-   cat ${DATA_PATH}/$prefix.$SRC | \
-   $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $SRC | \
-   ../preprocess/normalise-romanian.py | \
-   ../preprocess/remove-diacritics.py | \
-   $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $SRC > ${DATA_PATH}/$prefix.tok.$SRC
+do
+   if [ "${SRC}" = "ro" ];
+   then
+       cat ${DATA_PATH}/$prefix.$SRC | \
+           $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $SRC | \
+           ../preprocess/normalise-romanian.py | \
+           ../preprocess/remove-diacritics.py | \
+           $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $SRC > ${DATA_PATH}/$prefix.tok.$SRC
+   else
+       cat ${DATA_PATH}/$prefix.$SRC | \
+           $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $SRC | \
+           $mosesdecoder/scripts/tokenizer/tokenizer.perl -a -l $SRC > ${DATA_PATH}/$prefix.tok.$SRC
+   fi;
 
    cat ${DATA_PATH}/$prefix.$TRG | \
    $mosesdecoder/scripts/tokenizer/normalize-punctuation.perl -l $TRG | \
