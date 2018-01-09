@@ -16,7 +16,7 @@
 export $(cat .env | xargs)
 
 # suffix of source language files
-SRC=de #ro
+SRC=fi #ro
 
 # suffix of target language files
 TRG=en
@@ -33,6 +33,8 @@ subword_nmt=${SUBWORD_NMT_PATH}
 
 # path to nematus ( https://www.github.com/rsennrich/nematus )
 nematus=${NEMATUS_PATH}
+
+mkdir -p ${MODEL_PATH}
 
 # tokenize
 for prefix in corpus newsdev2016 newstest2016
@@ -59,9 +61,11 @@ do
 # clean empty and long sentences, and sentences with high source-target ratio (training corpus only)
 $mosesdecoder/scripts/training/clean-corpus-n.perl ${DATA_PATH}/corpus.tok $SRC $TRG ${DATA_PATH}/corpus.tok.clean 1 80
 
+
 # train truecaser
 $mosesdecoder/scripts/recaser/train-truecaser.perl -corpus ${DATA_PATH}/corpus.tok.clean.$SRC -model ${MODEL_PATH}/truecase-model.$SRC
 $mosesdecoder/scripts/recaser/train-truecaser.perl -corpus ${DATA_PATH}/corpus.tok.clean.$TRG -model ${MODEL_PATH}/truecase-model.$TRG
+
 
 # apply truecaser (cleaned training corpus)
 for prefix in corpus
